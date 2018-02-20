@@ -25,8 +25,6 @@ function initSquares() {
   return squaresArr;
 }
 
-initSquares(); 
-
 let startPosX = 0;
 let startPosY = 0;
 let position = (startPos) => Math.floor(Math.random() * 800)/2
@@ -42,13 +40,13 @@ function drawFrame() {
 
   for (let i = 0; i < squaresArr.length; i++) {
     let square = squaresArr[i];
-    square.y = startPosY + position();
-    square.x = startPosX + position();
+    square.y =  position();
+    square.x =  position();
     context.fillStyle = square.color;
     context.fillRect(square.x, square.y, 50, 50);
   }
   startPosX = position();
-  startPosY = position();
+  startPosY += 20;
 
   if (startPosX >= canvas.clientHeight) {
     startPosX = 0;
@@ -56,7 +54,6 @@ function drawFrame() {
   if (startPosY >= canvas.clientHeight) {
     startPosY = 0;
   }
-  setTimeout('drawFrame()', 1000);
 }
 
 const count = document.getElementById('score');
@@ -69,13 +66,14 @@ function counter() {
 };
 
 function startGame() {
+  initSquares(); 
   i = 0;
   count.innerHTML = 0;
-  time = setTimeout('drawFrame()', 1000);
+  time = setInterval('drawFrame()', 1000);
 };
 
 function stopGame() {
-  clearTimeout(time);
+  clearInterval(time);
   context.clearRect(0, 0, canvas.width, canvas.height);
   squaresArr = [];
 };
@@ -91,7 +89,8 @@ function squareClick(e) {
     if ((clickX > (square.x-35)) && (clickX < (square.x+35))) {
       if ((clickY > (square.y-35)) && (clickY < (square.y+35))) {
         counter();
-        squaresArr.splice( square, 1);
+        squaresArr.splice(square, 1);
+        squaresArr.push(square);
         return;
       }
     }
